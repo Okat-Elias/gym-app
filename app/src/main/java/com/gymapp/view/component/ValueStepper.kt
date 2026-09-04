@@ -17,9 +17,9 @@ fun ValueStepper(
     value: String,
     onDecrease: () -> Unit,
     onIncrease: () -> Unit,
+    modifier: Modifier = Modifier,
     decreaseEnabled: Boolean = true,
     increaseEnabled: Boolean = true,
-    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),

@@ -8,7 +8,7 @@ import com.gymapp.model.repository.ExerciseRepository
 import com.gymapp.model.repository.WorkoutRepository
 import com.gymapp.model.usecase.CalculateWeeklyMuscleVolume
 import java.time.DayOfWeek
-import java.time.LocalDate
+import java.time.Instant
 import java.time.ZoneId
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -81,11 +81,10 @@ class StatisticsController(
     }
 
     private fun currentWeekBounds(): Pair<Long, Long> {
-        val today = LocalDate.ofInstant(java.time.Instant.ofEpochMilli(clock()), zoneId)
+        val today = Instant.ofEpochMilli(clock()).atZone(zoneId).toLocalDate()
         val monday = today.with(DayOfWeek.MONDAY)
         val start = monday.atStartOfDay(zoneId).toInstant().toEpochMilli()
         val end = monday.plusWeeks(1).atStartOfDay(zoneId).toInstant().toEpochMilli()
         return start to end
     }
 }
-
