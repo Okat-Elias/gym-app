@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import com.gymapp.model.data.local.GymDatabase
 import com.gymapp.model.data.local.repository.RoomExerciseRepository
+import com.gymapp.model.data.local.repository.RoomRoutineRepository
 import com.gymapp.model.data.local.repository.RoomWorkoutRepository
 import com.gymapp.model.domain.Exercise
 import com.gymapp.model.domain.MuscleGroup
 import com.gymapp.model.domain.MuscleTarget
 import com.gymapp.model.repository.ExerciseRepository
+import com.gymapp.model.repository.RoutineRepository
 import com.gymapp.model.repository.WorkoutRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +27,7 @@ class AppContainer(context: Context) {
 
     val exerciseRepository: ExerciseRepository = RoomExerciseRepository(database.exerciseDao())
     val workoutRepository: WorkoutRepository = RoomWorkoutRepository(database.workoutDao())
+    val routineRepository: RoutineRepository = RoomRoutineRepository(database.routineDao())
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -80,4 +83,3 @@ class AppContainer(context: Context) {
         )
     }
 }
-

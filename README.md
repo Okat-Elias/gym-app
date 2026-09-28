@@ -13,15 +13,41 @@ Cette première itération pose une architecture MVC adaptée à Jetpack Compose
 parcours local :
 
 - catalogue d'exercices initialisé dans Room ;
-- saisie rapide d'une séance et validation de séries avec charge, répétitions et RPE ;
+- création de routines nommées avec sélection et ordre des exercices ;
+- lancement d'une routine dans une séance indépendante avec chronomètre ;
+- saisie manuelle du poids (virgule ou point), des répétitions et du RPE facultatif ;
+- bilan et historique des séances : durée, séries, répétitions, tonnage et notes ;
 - persistance locale hors connexion ;
 - statistiques hebdomadaires pondérées par groupe musculaire ;
 - calculateur de chargement de barre à inventaire limité ;
 - modèles et algorithmes métier testables sans UI Android.
 
-Les routines complètes, le chronomètre système, les graphiques, Health Connect, Wear OS, le cloud
+L'édition des routines enregistrées, le chronomètre de repos avec notifications, les graphiques, Health Connect, Wear OS, le cloud
 et les fonctions sociales sont volontairement différés. Leur ordre est décrit dans
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## Utiliser routines et séances
+
+1. Dans **Routines**, saisir un nom, cocher les exercices et régler leur ordre, puis enregistrer.
+2. Dans **Séance**, sélectionner la routine et toucher **Lancer la séance**. Une séance avec ses
+   propres identifiants et son heure de début est sauvegardée dès le démarrage.
+3. Pour chaque exercice, saisir le poids en kg et les répétitions, puis **Valider la série**.
+   Les charges de 0 à 1 000 kg sont acceptées avec trois décimales maximum ; le RPE est facultatif.
+   Une série incorrecte peut être retirée et ressaisie.
+4. Toucher **Fin de l'entraînement**, puis confirmer. Les saisies de séries encore présentes
+   doivent d'abord être validées ou vidées. Les exercices sans série peuvent être ignorés.
+5. Le bilan conserve les séries, notes, début et fin de la séance. Il reste consultable dans
+   **Séances enregistrées**, depuis l'onglet Séance.
+
+Chaque série validée est sauvegardée hors ligne. Après fermeture du processus, la séance active
+est rechargée et sa durée recalculée depuis son heure de début. Les champs non validés ne sont pas
+persistés ; les notes sont sauvegardées à la prochaine écriture de séance ou à sa finalisation.
+Le tonnage est la somme `charge × répétitions` de toutes les séries validées, calculée à partir
+des valeurs persistées. Il ne double pas automatiquement la charge des haltères et n'est pas
+une estimation de la masse corporelle. Le volume musculaire suit sa propre règle (séries de travail).
+
+Les tables de la version 1 couvraient déjà routines et séances : aucune migration ni suppression
+des anciennes séances n'est nécessaire pour ce parcours. Le catalogue initial contient quatre exercices.
 
 ## Architecture MVC
 

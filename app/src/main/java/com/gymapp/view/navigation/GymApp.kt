@@ -20,6 +20,7 @@ import com.gymapp.controller.MainDestination
 fun GymApp(
     mainController: MainController,
     dashboard: @Composable () -> Unit,
+    routines: @Composable () -> Unit,
     workout: @Composable () -> Unit,
     statistics: @Composable () -> Unit,
     tools: @Composable () -> Unit,
@@ -54,6 +55,7 @@ fun GymApp(
         ) {
             when (state.destination) {
                 MainDestination.DASHBOARD -> dashboard()
+                MainDestination.ROUTINES -> routines()
                 MainDestination.WORKOUT -> workout()
                 MainDestination.STATISTICS -> statistics()
                 MainDestination.TOOLS -> tools()

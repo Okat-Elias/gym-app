@@ -12,6 +12,7 @@ import com.gymapp.controller.MainAction
 import com.gymapp.controller.MainController
 import com.gymapp.controller.MainDestination
 import com.gymapp.controller.dashboard.DashboardController
+import com.gymapp.controller.routines.RoutinesController
 import com.gymapp.controller.statistics.StatisticsController
 import com.gymapp.controller.tools.PlateCalculatorController
 import com.gymapp.controller.workout.WorkoutController
@@ -19,6 +20,7 @@ import com.gymapp.di.controllerFactory
 import com.gymapp.model.usecase.CalculateWeeklyMuscleVolume
 import com.gymapp.view.dashboard.DashboardRoute
 import com.gymapp.view.navigation.GymApp
+import com.gymapp.view.routines.RoutinesRoute
 import com.gymapp.view.statistics.StatisticsRoute
 import com.gymapp.view.theme.GymTheme
 import com.gymapp.view.tools.PlateCalculatorScreen
@@ -49,6 +51,7 @@ class MainActivity : ComponentActivity() {
                         controllerFactory {
                             WorkoutController(
                                 exerciseRepository = container.exerciseRepository,
+                                routineRepository = container.routineRepository,
                                 workoutRepository = container.workoutRepository,
                             )
                         }
@@ -62,6 +65,13 @@ class MainActivity : ComponentActivity() {
                                 workoutRepository = container.workoutRepository,
                                 calculateWeeklyMuscleVolume = CalculateWeeklyMuscleVolume(),
                             )
+                        }
+                    },
+                )
+                val routinesController: RoutinesController = viewModel(
+                    factory = remember(container) {
+                        controllerFactory {
+                            RoutinesController(container.exerciseRepository, container.routineRepository)
                         }
                     },
                 )
@@ -91,7 +101,16 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                     },
-                    workout = { WorkoutRoute(workoutController) },
+                    routines = {
+                        RoutinesRoute(routinesController) {
+                            mainController.onAction(MainAction.SelectDestination(MainDestination.WORKOUT))
+                        }
+                    },
+                    workout = {
+                        WorkoutRoute(workoutController) {
+                            mainController.onAction(MainAction.SelectDestination(MainDestination.ROUTINES))
+                        }
+                    },
                     statistics = { StatisticsRoute(statisticsController) },
                     tools = {
                         PlateCalculatorScreen(
@@ -104,4 +123,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

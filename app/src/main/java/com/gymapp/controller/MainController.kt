@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 enum class MainDestination(val label: String, val shortLabel: String) {
     DASHBOARD(label = "Accueil", shortLabel = "A"),
+    ROUTINES(label = "Routines", shortLabel = "R"),
     WORKOUT(label = "Séance", shortLabel = "S"),
     STATISTICS(label = "Statistiques", shortLabel = "Stats"),
     TOOLS(label = "Outils", shortLabel = "O"),
@@ -32,4 +33,3 @@ class MainController : ViewModel(), ScreenController<MainUiState, MainAction> {
         }
     }
 }
-

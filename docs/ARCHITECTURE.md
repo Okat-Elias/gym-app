@@ -107,7 +107,7 @@ app/src/main/java/com/gymapp/
 ```
 
 Le répertoire source se nomme `java` selon la convention Android, mais contient bien du Kotlin. La
-base Room version 1, le conteneur de dépendances et quatre contrôleurs d'écran sont déjà présents
+base Room version 1, le conteneur de dépendances et cinq contrôleurs d'écran sont déjà présents
 dans le module `app` ; cette documentation conserve cette organisation au lieu d'introduire une
 seconde arborescence concurrente.
 
@@ -206,7 +206,7 @@ Créer un module par écran avant ces seuils augmenterait la configuration Gradl
 
 ## 4. Navigation
 
-Dans le squelette actuel, `MainController` porte uniquement la sélection entre les quatre onglets et `GymApp` affiche le contenu correspondant. Ce mécanisme léger suffit tant qu'il n'existe ni pile de retour, ni argument de route.
+Dans le squelette actuel, `MainController` porte uniquement la sélection entre les cinq onglets et `GymApp` affiche le contenu correspondant. Ce mécanisme léger suffit tant qu'il n'existe ni pile de retour, ni argument de route.
 
 Lorsque les écrans de détail apparaîtront, la navigation sera centralisée dans un `AppNavHost`. Les contrôleurs pourront émettre une destination métier ou un effet ; seule la `Route` exécutera la navigation Android.
 
@@ -226,7 +226,9 @@ Root
     └── Settings
 ```
 
-La barre inférieure actuelle expose Accueil, Séance, Statistiques et Outils. Le profil et les réglages peuvent rester sous Outils jusqu'à justifier une destination dédiée. Une séance active reste accessible depuis les autres onglets par une bannière ou une action persistante.
+La barre inférieure actuelle expose Accueil, Routines, Séance, Statistiques et Outils. Le profil et les réglages peuvent rester sous Outils jusqu'à justifier une destination dédiée. Une séance active reste accessible en revenant dans l'onglet Séance ; une bannière persistante pourra compléter cette navigation.
+
+L'onglet Routines enregistre un modèle réutilisable : nom, notes et exercices ordonnés. L'onglet Séance lance une copie indépendante de ce plan, avec de nouveaux identifiants, une heure de début et des séries initialement vides. Chaque série validée est persistée ; la finalisation enregistre l'heure de fin et les notes. Le bilan et l'historique calculent le tonnage depuis les séries enregistrées, sans modifier la routine d'origine.
 
 Les identifiants passés dans les routes sont sauvegardés dans `SavedStateHandle`. Les objets complets ne transitent pas dans les arguments de navigation : ils sont relus depuis le Model.
 
