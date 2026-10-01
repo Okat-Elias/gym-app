@@ -13,31 +13,51 @@ Cette première itération pose une architecture MVC adaptée à Jetpack Compose
 parcours local :
 
 - catalogue d'exercices initialisé dans Room ;
-- création de routines nommées avec sélection et ordre des exercices ;
+- création, modification et suppression de routines nommées avec choix des exercices dans une liste et réglage de leur ordre ;
 - lancement d'une routine dans une séance indépendante avec chronomètre ;
-- saisie manuelle du poids (virgule ou point), des répétitions et du RPE facultatif ;
+- saisie manuelle du poids (virgule ou point), des répétitions, du type de série et du RPE facultatif ;
+- rappel et préremplissage des séries de la dernière séance terminée avec la même routine ;
 - bilan et historique des séances : durée, séries, répétitions, tonnage et notes ;
 - persistance locale hors connexion ;
 - statistiques hebdomadaires pondérées par groupe musculaire ;
 - calculateur de chargement de barre à inventaire limité ;
 - modèles et algorithmes métier testables sans UI Android.
 
-L'édition des routines enregistrées, le chronomètre de repos avec notifications, les graphiques, Health Connect, Wear OS, le cloud
+Le chronomètre de repos avec notifications, les graphiques, Health Connect, Wear OS, le cloud
 et les fonctions sociales sont volontairement différés. Leur ordre est décrit dans
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Utiliser routines et séances
 
-1. Dans **Routines**, saisir un nom, cocher les exercices et régler leur ordre, puis enregistrer.
+1. Dans **Routines**, saisir un nom, toucher **Ajouter un exercice**, choisir dans la liste et régler
+   l'ordre des exercices, puis enregistrer. **Remplacer** sur un exercice choisi rouvre cette liste.
 2. Dans **Séance**, sélectionner la routine et toucher **Lancer la séance**. Une séance avec ses
    propres identifiants et son heure de début est sauvegardée dès le démarrage.
 3. Pour chaque exercice, saisir le poids en kg et les répétitions, puis **Valider la série**.
    Les charges de 0 à 1 000 kg sont acceptées avec trois décimales maximum ; le RPE est facultatif.
    Une série incorrecte peut être retirée et ressaisie.
+   Pendant une séance, **Ajouter un exercice** ouvre aussi le catalogue ; **Remplacer** permet de
+   changer un exercice qui n'a pas encore de séries validées. La routine enregistrée reste intacte.
 4. Toucher **Fin de l'entraînement**, puis confirmer. Les saisies de séries encore présentes
-   doivent d'abord être validées ou vidées. Les exercices sans série peuvent être ignorés.
+   doivent d'abord être validées ou vidées. Les exercices sans série peuvent être ignorés. Si
+   la liste d'exercices a changé pendant la séance, choisir si la routine doit reprendre cette
+   nouvelle liste pour les prochains entraînements.
 5. Le bilan conserve les séries, notes, début et fin de la séance. Il reste consultable dans
-   **Séances enregistrées**, depuis l'onglet Séance.
+   **Séances enregistrées**, depuis l'onglet Séance. Une séance peut être supprimée de cet historique.
+
+Une routine enregistrée peut être modifiée ou supprimée depuis **Mes routines**. La suppression
+conserve les séances passées. Lors du prochain lancement de la même routine, les séries de sa
+dernière séance terminée sont affichées et proposées une par une dans le formulaire. Vous pouvez
+changer leur poids, leurs répétitions et leur type (**Échauffement**, **Effective**, **Dropset** ou
+**Allégée**), reprendre une autre série ou effacer la proposition. Elles ne deviennent des séries
+de la nouvelle séance qu'après validation. Une proposition laissée telle quelle peut être ignorée
+à la fin de la séance.
+
+Ajouter ou remplacer un exercice pendant une séance ne modifie pas immédiatement la routine.
+À la fin, l'application propose de mettre à jour cette routine si sa liste a changé. Les séances
+terminées restent dans l'historique dans les deux cas. Le volume hebdomadaire est calculé à partir
+des séries effectives validées de la séance réelle : les exercices ajoutés ou remplacés y
+contribuent selon leurs groupes musculaires, même si la routine n'est pas mise à jour.
 
 Chaque série validée est sauvegardée hors ligne. Après fermeture du processus, la séance active
 est rechargée et sa durée recalculée depuis son heure de début. Les champs non validés ne sont pas

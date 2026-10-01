@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface RoutineRepository {
     fun observeRoutines(): Flow<List<Routine>>
     suspend fun saveRoutine(routine: Routine)
+    suspend fun deleteRoutine(routineId: String)
 }

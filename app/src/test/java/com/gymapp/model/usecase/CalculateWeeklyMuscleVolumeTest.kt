@@ -50,6 +50,73 @@ class CalculateWeeklyMuscleVolumeTest {
     }
 
     @Test
+    fun `counts actual session exercises after replacing and adding to a routine workout`() {
+        val templateBenchPress = Exercise(
+            id = "bench",
+            name = "Bench press",
+            muscleTargets = listOf(MuscleTarget(MuscleGroup.CHEST, 10_000)),
+        )
+        val replacementPullDown = Exercise(
+            id = "pull-down",
+            name = "Lat pull-down",
+            muscleTargets = listOf(
+                MuscleTarget(MuscleGroup.BACK, 10_000),
+                MuscleTarget(MuscleGroup.BICEPS, 5_000),
+            ),
+        )
+        val addedRomanianDeadlift = Exercise(
+            id = "romanian-deadlift",
+            name = "Romanian deadlift",
+            muscleTargets = listOf(MuscleTarget(MuscleGroup.HAMSTRINGS, 10_000)),
+        )
+        val actualSession = WorkoutSession(
+            id = "session-with-changes",
+            routineId = "routine-that-originally-contained-bench",
+            startedAtEpochMillis = 1_500,
+            endedAtEpochMillis = 1_800,
+            exercises = listOf(
+                WorkoutExercise(
+                    id = "replaced-exercise",
+                    exerciseId = replacementPullDown.id,
+                    orderIndex = 0,
+                    sets = listOf(
+                        set("pull-down-1", completed = true).copy(orderIndex = 0),
+                        set("pull-down-2", completed = true).copy(orderIndex = 1),
+                    ),
+                ),
+                WorkoutExercise(
+                    id = "added-exercise",
+                    exerciseId = addedRomanianDeadlift.id,
+                    orderIndex = 1,
+                    sets = listOf(
+                        set("warm-up", WorkoutSetType.WARM_UP, completed = true)
+                            .copy(orderIndex = 0),
+                        set("working", completed = true).copy(orderIndex = 1),
+                        set("uncompleted", completed = false).copy(orderIndex = 2),
+                    ),
+                ),
+            ),
+        )
+
+        val result = calculate(
+            sessions = listOf(actualSession),
+            exercisesById = listOf(templateBenchPress, replacementPullDown, addedRomanianDeadlift)
+                .associateBy(Exercise::id),
+            weekStartEpochMillis = 1_000,
+            weekEndExclusiveEpochMillis = 2_000,
+        )
+
+        assertEquals(
+            mapOf(
+                MuscleGroup.BACK to 20_000,
+                MuscleGroup.BICEPS to 10_000,
+                MuscleGroup.HAMSTRINGS to 10_000,
+            ),
+            result,
+        )
+    }
+
+    @Test
     fun `uses a half-open weekly interval`() {
         val squat = Exercise(
             id = "squat",

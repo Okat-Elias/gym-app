@@ -38,4 +38,8 @@ class RoomRoutineRepository(private val dao: RoutineDao) : RoutineRepository {
             },
         )
     }
+
+    override suspend fun deleteRoutine(routineId: String) {
+        dao.deleteRoutine(routineId)
+    }
 }

@@ -230,6 +230,12 @@ La barre inférieure actuelle expose Accueil, Routines, Séance, Statistiques et
 
 L'onglet Routines enregistre un modèle réutilisable : nom, notes et exercices ordonnés. L'onglet Séance lance une copie indépendante de ce plan, avec de nouveaux identifiants, une heure de début et des séries initialement vides. Chaque série validée est persistée ; la finalisation enregistre l'heure de fin et les notes. Le bilan et l'historique calculent le tonnage depuis les séries enregistrées, sans modifier la routine d'origine.
 
+Une routine peut être modifiée avec le même identifiant ou supprimée. La clé étrangère de `workouts` passe alors à `NULL` et conserve les séances passées. Chaque séance terminée peut aussi être supprimée séparément de l'historique. Au lancement d'une nouvelle séance, les séries de la dernière séance terminée de cette routine sont affichées comme références et proposées successivement dans le formulaire ; aucune n'est copiée dans la nouvelle séance avant validation. Le type de série est déjà stocké dans `workout_sets`, sans migration du schéma.
+
+Le choix d'un exercice passe par une liste ouverte à la demande, depuis l'éditeur de routine ou la séance active. Ajouter un exercice à une séance change seulement cette séance. Remplacer un exercice de séance est autorisé tant qu'aucune série n'y a été validée, afin de ne jamais rattacher des séries passées au mauvais mouvement.
+
+Lorsqu'une séance se termine avec une liste d'exercices différente de sa routine liée, le contrôleur propose de remplacer le plan de la routine pour les prochains lancements. La séance réelle est finalisée avant l'écriture de la routine ; les entraînements passés restent des instantanés. Si la seconde écriture échoue, le bilan reste disponible et l'utilisateur peut relancer seulement la mise à jour du plan. Le volume hebdomadaire lit les exercices et les séries des séances réelles, indépendamment du plan réutilisable.
+
 Les identifiants passés dans les routes sont sauvegardés dans `SavedStateHandle`. Les objets complets ne transitent pas dans les arguments de navigation : ils sont relus depuis le Model.
 
 Les liens profonds d'import de routine sont différés jusqu'à la définition du format d'échange et de la politique de sécurité.
